@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRIVER AI - Hệ thống giám sát tài xế</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">DRIVER <span>AI</span></div>
+        <div id="serverStatus" class="server-status">
+            Đang kết nối máy chủ...
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <section class="intro">
+            <h1>HỆ THỐNG GIÁM SÁT TÀI XẾ</h1>
+            <p>Hệ thống phát hiện và cảnh báo tình trạng buồn ngủ theo thời gian thực</p>
+        </section>
+
+        <section class="monitor">
+
+            <!-- CỘT BÊN TRÁI: CAMERA -->
+            <div class="camera-panel">
+                <h2>GIÁM SÁT CAMERA</h2>
+
+                <div class="camera-container">
+                    <video id="camera" autoplay playsinline muted></video>
+                    <canvas id="overlay"></canvas>
+
+                    <div id="cameraPlaceholder">
+                        <p>Camera chưa được khởi động</p>
+                    </div>
+
+                    <div id="alertOverlay" class="alert-overlay hidden">
+                        <h2 id="alertMessage">CẢNH BÁO BUỒN NGỦ!</h2>
+                    </div>
+                </div>
+
+                <div class="camera-buttons">
+                    <button id="startBtn">BẬT CAMERA</button>
+                    <button id="stopBtn">TẮT CAMERA</button>
+                </div>
+            </div>
+
+            <!-- CỘT BÊN PHẢI: TRẠNG THÁI VÀ THỐNG KÊ -->
+            <div class="status-panel">
+                <h2>TRẠNG THÁI TÀI XẾ</h2>
+
+                <div id="driverStatus" class="driver-status">
+                    CHƯA GIÁM SÁT
+                </div>
+
+                <p id="detectionInfo">
+                    Vui lòng bật camera để bắt đầu giám sát.
+                </p>
+
+                <!-- PHÂN TÍCH BIỂU HIỆN -->
+                <div class="driver-analysis">
+                    <h3>PHÂN TÍCH BIỂU HIỆN</h3>
+
+                    <div class="analysis-grid">
+                        <div class="analysis-card">
+                            <span>TRẠNG THÁI MẮT</span>
+                            <strong id="eyeStatusValue">CHƯA XÁC ĐỊNH</strong>
+                            <small id="eyeValue">EAR: --</small>
+                        </div>
+
+                        <div class="analysis-card">
+                            <span>TRẠNG THÁI MIỆNG</span>
+                            <strong id="mouthStatusValue">CHƯA XÁC ĐỊNH</strong>
+                            <small id="mouthValue">MAR: --</small>
+                        </div>
+                    </div>
+
+                    <!-- THỐNG KÊ GIÁM SÁT -->
+                    <h3>THỐNG KÊ GIÁM SÁT</h3>
+
+                    <div class="analysis-grid">
+                        <div class="analysis-card">
+                            <span>SỐ CẢNH BÁO</span>
+                            <strong id="alertCountValue">0</strong>
+                        </div>
+
+                        <div class="analysis-card">
+                            <span>XÁC SUẤT NGÁP</span>
+                            <strong id="yawnValue">--</strong>
+                        </div>
+
+                        <div class="analysis-card">
+                            <span>KHOẢNG CÁCH HAI MẮT</span>
+                            <strong id="eyeDistanceValue">-- px</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NÚT THỬ CẢNH BÁO -->
+                <button id="testAlertBtn">THỬ CẢNH BÁO</button>
+
+                <!-- HƯỚNG DẪN SỬ DỤNG -->
+                <div class="usage-guide">
+                    <h3>HƯỚNG DẪN SỬ DỤNG</h3>
+                    <p>• Đặt khuôn mặt trong vùng camera.</p>
+                    <p>• Đảm bảo khuôn mặt đủ ánh sáng.</p>
+                    <p>• Khi có cảnh báo, hãy dừng xe tại nơi an toàn.</p>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- ÂM THANH CẢNH BÁO -->
+    <audio id="alarmAudio" src="/assets/canhbao.mp3" preload="auto"></audio>
+
+    <!-- JAVASCRIPT -->
+    <script src="/js/monitoring.js"></script>
+
+    <!-- KIỂM TRA MÁY CHỦ -->
+    <script>
+        fetch("/api/health")
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("serverStatus").textContent =
+                    "Máy chủ: " + data.status;
+            })
+            .catch(() => {
+                document.getElementById("serverStatus").textContent =
+                    "Không thể kết nối máy chủ";
+            });
+    </script>
+</body>
+</html>
